@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'Main',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +59,7 @@ DATABASES = {
         'HOST': 'user_db',
         'PORT': '5432',
     }
-}
+}  
 
 AUTH_PASSWORD_VALIDATORS = [
     {
