@@ -38,3 +38,17 @@ class Tutor(models.Model):
 
     def __str__(self):
         return self.user_name
+
+class Friendship(models.Model):
+    id = models.AutoField(primary_key=True)
+    requester = models.ForeignKey(UserDefault, blank=False, on_delete=models.CASCADE, related_name='friendship_requests', db_column='requester_id')
+    responder = models.ForeignKey(Tutor, blank=False, on_delete=models.CASCADE, related_name='friendship_responses', db_column='responder_id')
+    created_at = models.DateTimeField(auto_now_add=True)  
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'Friendship'
+        unique_together = ('requester', 'responder')
+
+    def __str__(self):
+        return f"{self.requester.user_name} -> {self.responder.user_name}"
