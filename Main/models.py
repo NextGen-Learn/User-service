@@ -14,7 +14,7 @@ class UserDefault(models.Model):
         db_table = 'UserDefault'
 
 class Tutor(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     email = models.EmailField()
     rating = models.FloatField()
     user_name = models.CharField(max_length=255)
