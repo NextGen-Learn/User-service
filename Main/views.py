@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
 from .models import UserDefault, Tutor
 from .serializers import UserDefaultSerializer, TutorSerializer
 
@@ -23,7 +24,6 @@ class UserCreateView(generics.CreateAPIView):
             'access': str(refresh.access_token),
         }, status=status.HTTP_201_CREATED)
 
-
 class TutorCreateView(generics.CreateAPIView):
     queryset = Tutor.objects.all()
     serializer_class = TutorSerializer
@@ -40,3 +40,34 @@ class TutorCreateView(generics.CreateAPIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }, status=status.HTTP_201_CREATED)
+
+class AllDefaultUsers(APIView):
+    def get(self, request):
+        user_defaults = UserDefault.objects.all()
+        user_default_serializer = UserDefaultSerializer(user_defaults, many=True)
+
+        return Response({
+            'user_defaults': user_default_serializer.data,
+        })
+
+class AllTutors(APIView):
+    def get(self, request):
+        tutors = Tutor.objects.all()
+        tutor_serializer = TutorSerializer(tutors, many=True)
+
+        return Response({
+            'tutors': tutor_serializer.data,
+        })
+    
+class AllUsers(APIView):
+     def get(self, request):
+        user_defaults = UserDefault.objects.all()
+        tutors = Tutor.objects.all()
+
+        user_default_serializer = UserDefaultSerializer(user_defaults, many=True)
+        tutor_serializer = TutorSerializer(tutors, many=True)
+
+        return Response({
+            'user_defaults': user_default_serializer.data,
+            'tutors': tutor_serializer.data
+        })
