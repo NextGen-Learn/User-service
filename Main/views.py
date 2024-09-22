@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from .models import UserDefault, Tutor
-from .serializers import UserDefaultSerializer, TutorSerializer
-
+from .serializers import *
+from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserCreateView(generics.CreateAPIView):
@@ -71,3 +71,25 @@ class AllUsers(APIView):
             'user_defaults': user_default_serializer.data,
             'tutors': tutor_serializer.data
         })
+
+class UserLoginView(APIView):
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            user.last_login = timezone.now()
+            user.save()
+
+            return Response({
+                'message': 'Login successful',
+
+                'user': {
+                    'id': user.id,
+                    'email': user.email,
+                    'user_name': user.user_name,
+                    'avatar': user.avatar,
+                    'last_login': user.last_login
+                }
+            }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
