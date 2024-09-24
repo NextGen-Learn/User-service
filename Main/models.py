@@ -4,9 +4,9 @@ from django.contrib.auth.hashers import make_password, check_password
 class UserDefault(models.Model):
     id = models.AutoField(primary_key=True)  
     email = models.EmailField(unique=True) 
-    user_name = models.CharField(max_length=255)  
+    user_name = models.CharField(max_length=255, unique=True)  
     phone_number = models.CharField(max_length=15) 
-    avatar = models.URLField() 
+    avatar = models.URLField(blank=True, null=True) 
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)  
     last_login = models.DateTimeField(null=True, blank=True) 
