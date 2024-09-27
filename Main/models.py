@@ -1,25 +1,27 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import AbstractUser
 
-class UserDefault(models.Model):
+class UserDefault(AbstractUser):
     id = models.AutoField(primary_key=True)  
     email = models.EmailField(unique=True) 
-    user_name = models.CharField(max_length=255, unique=True)  
-    phone_number = models.CharField(max_length=15) 
-    avatar = models.URLField(blank=True, null=True) 
+    username = models.CharField(max_length=255, unique=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    avatar = models.URLField(blank=True) 
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)  
     last_login = models.DateTimeField(null=True, blank=True) 
     password = models.CharField(max_length=128, null=True, blank=False)
 
     class Meta:
-        db_table = 'UserDefault'
-    
+        db_table = 'user_default'
+
     def set_password(self, raw_password):
-        self.password = make_password(raw_password) 
+        self.password = make_password(raw_password)
 
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)
+
 
 class Tutor(models.Model):
     id = models.AutoField(primary_key=True)
