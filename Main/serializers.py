@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
+from django.contrib.auth.hashers import make_password
 
 UserModel = get_user_model()
 
@@ -49,3 +50,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['password'] = make_password(representation['password'])
+        return representation

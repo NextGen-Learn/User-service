@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from .serializers import UserRegisterSerializer, UserLoginSerializer,UserSerializer
 from rest_framework import permissions, status
 from django.core.exceptions import ValidationError
-
+from .models import UserDefault 
 from .validations import custom_validation, validate_email, validate_password
 
 
@@ -47,15 +47,6 @@ class UserRegister(APIView):
 #             'refresh': str(refresh),
 #             'access': str(refresh.access_token),
 #         }, status=status.HTTP_201_CREATED)
-
-# class AllDefaultUsers(APIView):
-#     def get(self, request):
-#         user_defaults = UserDefault.objects.all()
-#         user_default_serializer = UserDefaultSerializer(user_defaults, many=True)
-
-#         return Response({
-#             'user_defaults': user_default_serializer.data,
-#         })
 
 # class AllTutors(APIView):
 #     def get(self, request):
@@ -107,3 +98,11 @@ class UserView(APIView):
         else:
             logger.debug(f'User not authenticated: {request.user}')
             return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_403_FORBIDDEN)
+        
+class AllDefaultUsers(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        users = UserDefault.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
